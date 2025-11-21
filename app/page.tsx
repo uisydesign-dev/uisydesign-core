@@ -1,5 +1,5 @@
 import { HeroCentered } from "@/components/hero-centered"
-import { Header, HeaderLogo, HeaderNav, HeaderGroup, RateButton, SearchButton } from "@/registry/new-york/blocks/header/header"
+import { Header, HeaderLogo, HeaderNav, HeaderGroup, SearchButton } from "@/registry/new-york/blocks/header/header"
 
 export default function Home() {
   return (
