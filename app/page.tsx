@@ -1,70 +1,117 @@
-import * as React from "react"
-import { OpenInV0Button } from "@/components/open-in-v0-button"
-import { HelloWorld } from "@/registry/new-york/blocks/hello-world/hello-world"
-import { ExampleForm } from "@/registry/new-york/blocks/example-form/example-form"
-import PokemonPage from "@/registry/new-york/blocks/complex-component/page"
-import { ExampleCard } from "@/registry/new-york/blocks/example-with-css/example-card"
-// This page displays items from the custom registry.
-// You are free to implement this with your own design as needed.
+import { HeroCentered } from "@/components/hero-centered"
+import { Header, HeaderLogo, HeaderNav, HeaderGroup, RateButton, SearchButton } from "@/registry/new-york/blocks/header/header"
 
 export default function Home() {
   return (
-    <div className="max-w-3xl mx-auto flex flex-col min-h-svh px-4 py-8 gap-8">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold tracking-tight">Custom Registry</h1>
-        <p className="text-muted-foreground">
-          A custom registry for distributing code using shadcn.
-        </p>
-      </header>
-      <main className="flex flex-col flex-1 gap-8">
-        <div className="flex flex-col gap-4 border rounded-lg p-4 min-h-[450px] relative">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm text-muted-foreground sm:pl-3">
-              A simple hello world component
-            </h2>
-            <OpenInV0Button name="hello-world" className="w-fit" />
-          </div>
-          <div className="flex items-center justify-center min-h-[400px] relative">
-            <HelloWorld />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4 border rounded-lg p-4 min-h-[450px] relative">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm text-muted-foreground sm:pl-3">
-              A contact form with Zod validation.
-            </h2>
-            <OpenInV0Button name="example-form" className="w-fit" />
-          </div>
-          <div className="flex items-center justify-center min-h-[500px] relative">
-            <ExampleForm />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4 border rounded-lg p-4 min-h-[450px] relative">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm text-muted-foreground sm:pl-3">
-              A complex component showing hooks, libs and components.
-            </h2>
-            <OpenInV0Button name="complex-component" className="w-fit" />
-          </div>
-          <div className="flex items-center justify-center min-h-[400px] relative">
-            <PokemonPage />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4 border rounded-lg p-4 min-h-[450px] relative">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm text-muted-foreground sm:pl-3">
-              A login form with a CSS file.
-            </h2>
-            <OpenInV0Button name="example-with-css" className="w-fit" />
-          </div>
-          <div className="flex items-center justify-center min-h-[400px] relative">
-            <ExampleCard />
-          </div>
-        </div>
-      </main>
-    </div>
+    <main className="min-h-svh flex flex-col">
+      <Header justify="between">
+        <HeaderGroup>
+          <HeaderLogo Icon={"./UIsyLogo.jpeg"} reversed>
+            UIsy Design
+          </HeaderLogo>
+          <HeaderNav
+            links={[
+              {
+                href: "/",
+                label: "Home",
+                isActive: true,
+                layout: "featured",
+                featured: {
+                  href: "/",
+                  title: "UIsy Framework",
+                  description: "A modern shadcn-forked UI system with AI-powered workflow tooling.",
+                },
+                items: [
+                  {
+                    title: "Docs Overview",
+                    href: "/docs",
+                    description: "Your starting point for understanding the UIsy ecosystem.",
+                  },
+                  {
+                    title: "Installation",
+                    href: "/docs/getting-started",
+                    description: "Set up UIsy in your project in minutes.",
+                  },
+                  {
+                    title: "Components",
+                    href: "/docs/components",
+                    description: "Explore beautifully-crafted, ready-to-use components.",
+                  },
+                ],
+              },
+              {
+                label: "Components",
+                layout: "double",
+                items: [
+                  {
+                    title: "UI Elements",
+                    href: "/docs/components/ui",
+                    description: "Buttons, badges, forms, and core building blocks.",
+                  },
+                  {
+                    title: "Layouts",
+                    href: "/docs/components/layouts",
+                    description: "Page structures and reusable layout primitives.",
+                  },
+                  {
+                    title: "Navigation",
+                    href: "/docs/components/navigation",
+                    description: "Menus, navbars, breadcrumbs, and more.",
+                  },
+                  {
+                    title: "Extended",
+                    href: "/docs/components/extended",
+                    description: "Extra components built on top of shadcn.",
+                  },
+                ],
+              },
+              {
+                label: "AI Tools",
+                layout: "featured",
+                featured: {
+                  href: "/ai",
+                  title: "AI Builder",
+                  description: "Generate components, hooks, and utilities using natural language.",
+                },
+                items: [
+                  {
+                    title: "Prompt Library",
+                    href: "/ai/prompts",
+                    description: "Curated prompts to speed up your workflow.",
+                  },
+                  {
+                    title: "Generate Component",
+                    href: "/ai/generate/component",
+                    description: "Describe a UI element — get production-ready code.",
+                  },
+                  {
+                    title: "Generate Layout",
+                    href: "/ai/generate/layout",
+                    description: "Turn ideas into full page structures instantly.",
+                  },
+                ],
+              },
+              {
+                label: "About",
+                layout: "single",
+                items: [
+                  { title: "Our Mission", href: "/about/mission" },
+                  { title: "Team", href: "/about/team" },
+                  { title: "Roadmap", href: "/about/roadmap" },
+                ],
+              },
+              {
+                href: "/contact",
+                label: "Contact",
+              },
+            ]}            
+          />
+        </HeaderGroup>
+        <HeaderGroup>
+          <SearchButton/>
+        </HeaderGroup>
+      </Header>
+      <HeroCentered/>
+    </main>
   )
 }
