@@ -1,4 +1,4 @@
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/uisydesign/ui/button"
 import { cn } from "@/lib/utils"
 
 export function OpenInV0Button({

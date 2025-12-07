@@ -4,22 +4,20 @@ import { ArrowRight } from "lucide-react"
 export function HeroCentered() {
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-20">
-      <div className="mx-auto max-w-4xl text-center">
-        <div className="mb-6 inline-block rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-foreground">
+      <div className="z-2 mx-auto max-w-4xl text-center">
+        <div className="mb-2 inline-block rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-foreground">
           Introducing Our Latest Innovation
         </div>
 
-        <h1 className="mb-6 text-balance font-sans text-5xl font-bold leading-tight tracking-tight text-foreground md:text-6xl ">
-          {"A little bit of everything. That's what makes UI so easy. UIsy."}
+        <h1 className="mb-2 text-balance font-sans text-6xl font-bold leading-tight tracking-tight text-white md:text-6xl ">
+          A little bit of everything. That's what makes <span className="text-[#F84E6A]">UI</span> so <span className="text-[#F84E6A]">easy</span>. <span className="text-[#F84E6A]">UIsy</span>.
         </h1>
 
-        <p className="mx-auto mb-10 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground md:text-xl">
-          {
-            "Create stunning digital products with our powerful tools and intuitive design system. Everything you need to bring your vision to life."
-          }
+        <p className="mx-auto text-white mb-20 max-w-2xl text-pretty text-lg leading-relaxed md:text-xl">
+          Create stunning digital products with our powerful tools and intuitive design system. Everything you need to bring your vision to life.
         </p>
 
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div className="flex mt-4 flex-col items-center justify-center gap-4 sm:flex-row">
           <Button size="lg" className="group">
             {"Get Started"}
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -29,14 +27,14 @@ export function HeroCentered() {
           </Button>
         </div>
 
-        <div className="mt-16 flex items-center justify-center gap-8 text-sm text-muted-foreground">
+        <div className="text-white mt-4 flex items-center justify-center gap-8 text-sm color-white">
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-primary"></div>
-            <span>{"No credit card required"}</span>
+            <span>Text Here</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full bg-primary"></div>
-            <span>{"14-day free trial"}</span>
+            <span>Text Here</span>
           </div>
         </div>
       </div>

@@ -1,117 +1,41 @@
 import { HeroCentered } from "@/components/hero-centered"
-import { Header, HeaderLogo, HeaderNav, HeaderGroup, SearchButton } from "@/registry/new-york/blocks/header/header"
+import PageHeader from "@/components/UsedComponents/Header"
 
 export default function Home() {
   return (
     <main className="min-h-svh flex flex-col">
-      <Header justify="between">
-        <HeaderGroup>
-          <HeaderLogo Icon={"./UIsyLogo.jpeg"} reversed>
-            UIsy Design
-          </HeaderLogo>
-          <HeaderNav
-            links={[
-              {
-                href: "/",
-                label: "Home",
-                isActive: true,
-                layout: "featured",
-                featured: {
-                  href: "/",
-                  title: "UIsy Framework",
-                  description: "A modern shadcn-forked UI system with AI-powered workflow tooling.",
-                },
-                items: [
-                  {
-                    title: "Docs Overview",
-                    href: "/docs",
-                    description: "Your starting point for understanding the UIsy ecosystem.",
-                  },
-                  {
-                    title: "Installation",
-                    href: "/docs/getting-started",
-                    description: "Set up UIsy in your project in minutes.",
-                  },
-                  {
-                    title: "Components",
-                    href: "/docs/components",
-                    description: "Explore beautifully-crafted, ready-to-use components.",
-                  },
-                ],
-              },
-              {
-                label: "Components",
-                layout: "double",
-                items: [
-                  {
-                    title: "UI Elements",
-                    href: "/docs/components/ui",
-                    description: "Buttons, badges, forms, and core building blocks.",
-                  },
-                  {
-                    title: "Layouts",
-                    href: "/docs/components/layouts",
-                    description: "Page structures and reusable layout primitives.",
-                  },
-                  {
-                    title: "Navigation",
-                    href: "/docs/components/navigation",
-                    description: "Menus, navbars, breadcrumbs, and more.",
-                  },
-                  {
-                    title: "Extended",
-                    href: "/docs/components/extended",
-                    description: "Extra components built on top of shadcn.",
-                  },
-                ],
-              },
-              {
-                label: "AI Tools",
-                layout: "featured",
-                featured: {
-                  href: "/ai",
-                  title: "AI Builder",
-                  description: "Generate components, hooks, and utilities using natural language.",
-                },
-                items: [
-                  {
-                    title: "Prompt Library",
-                    href: "/ai/prompts",
-                    description: "Curated prompts to speed up your workflow.",
-                  },
-                  {
-                    title: "Generate Component",
-                    href: "/ai/generate/component",
-                    description: "Describe a UI element — get production-ready code.",
-                  },
-                  {
-                    title: "Generate Layout",
-                    href: "/ai/generate/layout",
-                    description: "Turn ideas into full page structures instantly.",
-                  },
-                ],
-              },
-              {
-                label: "About",
-                layout: "single",
-                items: [
-                  { title: "Our Mission", href: "/about/mission" },
-                  { title: "Team", href: "/about/team" },
-                  { title: "Roadmap", href: "/about/roadmap" },
-                ],
-              },
-              {
-                href: "/contact",
-                label: "Contact",
-              },
-            ]}            
+
+      {/* Wrap Hero and SVG in a relative container */}
+      <div className="relative w-full">
+        <HeroCentered />
+
+        {/* Raw SVG overlay */}
+        <svg
+          id="visual"
+          viewBox="0 0 500 500"
+          className="absolute w-full left-0 -bottom-10 pointer-events-none"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          version="1.1"
+        >
+          <path
+            d="
+    M0 300
+    C80 285, 150 240, 250 270
+    C350 300, 420 285, 500 300
+    L500 500 L0 500 Z
+  "
+            fill="#fa7268"
           />
-        </HeaderGroup>
-        <HeaderGroup>
-          <SearchButton/>
-        </HeaderGroup>
-      </Header>
-      <HeroCentered/>
+
+
+          <path d="M0 396L21.5 393C43 390 86 384 128.8 386.2C171.7 388.3 214.3 398.7 257.2 406.2C300 413.7 343 418.3 385.8 410.7C428.7 403 471.3 383 514.2 373C557 363 600 363 642.8 367.2C685.7 371.3 728.3 379.7 771.2 387.3C814 395 857 402 878.5 405.5L900 409L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="#fa5872"></path>
+          <path d="M0 393L21.5 395C43 397 86 401 128.8 414.5C171.7 428 214.3 451 257.2 457.2C300 463.3 343 452.7 385.8 441C428.7 429.3 471.3 416.7 514.2 413.5C557 410.3 600 416.7 642.8 421.2C685.7 425.7 728.3 428.3 771.2 432C814 435.7 857 440.3 878.5 442.7L900 445L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="#f43e82"></path>
+          <path d="M0 449L21.5 448.2C43 447.3 86 445.7 128.8 447C171.7 448.3 214.3 452.7 257.2 458.8C300 465 343 473 385.8 479.8C428.7 486.7 471.3 492.3 514.2 490C557 487.7 600 477.3 642.8 466.3C685.7 455.3 728.3 443.7 771.2 444.7C814 445.7 857 459.3 878.5 466.2L900 473L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="#e72397"></path>
+          <path d="M0 519L21.5 514.3C43 509.7 86 500.3 128.8 495.7C171.7 491 214.3 491 257.2 494.3C300 497.7 343 504.3 385.8 502.2C428.7 500 471.3 489 514.2 488.5C557 488 600 498 642.8 501.8C685.7 505.7 728.3 503.3 771.2 498.8C814 494.3 857 487.7 878.5 484.3L900 481L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="#d016ae"></path>
+          <path d="M0 537L21.5 541.2C43 545.3 86 553.7 128.8 558.8C171.7 564 214.3 566 257.2 560.3C300 554.7 343 541.3 385.8 541.2C428.7 541 471.3 554 514.2 553C557 552 600 537 642.8 532C685.7 527 728.3 532 771.2 532.8C814 533.7 857 530.3 878.5 528.7L900 527L900 601L878.5 601C857 601 814 601 771.2 601C728.3 601 685.7 601 642.8 601C600 601 557 601 514.2 601C471.3 601 428.7 601 385.8 601C343 601 300 601 257.2 601C214.3 601 171.7 601 128.8 601C86 601 43 601 21.5 601L0 601Z" fill="#ac23c7"></path>
+        </svg>
+      </div>
     </main>
   )
 }
