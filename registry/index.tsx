@@ -8,12 +8,12 @@ export const registry: Registry = [
     registryDependencies: ["navigation-menu", "input", "dropdown-menu"],
     files: [
       {
-          path: "registry/new-york/blocks/header/index.tsx",
-          content: "",
-          type: "text/typescript",
-          target: "components/ui/header.tsx",
-          name: "Header"
+        path: "registry/new-york/blocks/header/index.tsx",
+        content: "",
+        type: "text/typescript",
+        target: "components/ui/header.tsx",
+        name: "Header",
       },
     ],
   },
-]
+];

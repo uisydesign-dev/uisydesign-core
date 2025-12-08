@@ -25,7 +25,7 @@ interface ComponentsPage {
 
 
 interface PageProps {
-  params: { var?: string[] };
+  params: { var: string[] | undefined };
 }
 
 
