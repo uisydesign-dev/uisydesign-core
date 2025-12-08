@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, FC } from "react"
 import { COMPONENTS, DATA } from "@/lib/information"
 import { SelectorLink } from "@/registry/uisydesign/blocks/selector"
 import { LucideIcon, Rocket } from "lucide-react"
@@ -24,8 +24,12 @@ interface ComponentsPage {
 }
 
 
+interface PageProps {
+  params: { var?: string[] };
+}
 
-export default function DocsPage({ params }: { params: { var?: string[] } }) {
+
+const DocsPage: FC<PageProps> = ({ params }) => {
   const value = params.var?.[0] ?? "Get-Started"
 
   const [type, setType] = useState<CurrentMode | null>(null)
@@ -135,3 +139,5 @@ export default function DocsPage({ params }: { params: { var?: string[] } }) {
     </main>
   )
 }
+
+export default DocsPage;
