@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, JSX } from "react"
+import React, { useState, useEffect } from "react"
 import { COMPONENTS, DATA } from "@/lib/information"
 import { SelectorLink } from "@/registry/uisydesign/blocks/selector"
 import { LucideIcon, Rocket } from "lucide-react"
@@ -8,15 +8,7 @@ import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"

@@ -1,4 +1,4 @@
-import { Header, HeaderLogo, HeaderNav, HeaderGroup, SearchButton, ThemeToggle, MenubarWithAvatar } from "@/registry/uisydesign/blocks/header"
+import { Header, HeaderLogo, HeaderNav, HeaderGroup, SearchButton, MenubarWithAvatar } from "@/registry/uisydesign/blocks/header"
 import { Building2 } from "lucide-react";
 
 export default function IFrameHeader() {

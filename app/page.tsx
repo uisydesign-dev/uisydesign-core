@@ -1,5 +1,4 @@
 import { HeroCentered } from "@/components/hero-centered"
-import PageHeader from "@/components/UsedComponents/Header"
 
 export default function Home() {
   return (

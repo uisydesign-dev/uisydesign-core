@@ -10,7 +10,7 @@ export function HeroCentered() {
         </div>
 
         <h1 className="mb-2 text-balance font-sans text-6xl font-bold leading-tight tracking-tight text-white md:text-6xl ">
-          A little bit of everything. That's what makes <span className="text-[#F84E6A]">UI</span> so <span className="text-[#F84E6A]">easy</span>. <span className="text-[#F84E6A]">UIsy</span>.
+          A little bit of everything. That&apos;s what makes <span className="text-[#F84E6A]">UI</span> so <span className="text-[#F84E6A]">easy</span>. <span className="text-[#F84E6A]">UIsy</span>.
         </h1>
 
         <p className="mx-auto text-white mb-20 max-w-2xl text-pretty text-lg leading-relaxed md:text-xl">
