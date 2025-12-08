@@ -29,7 +29,7 @@ interface PageProps {
 }
 
 
-const DocsPage: FC<PageProps> = ({ params }) => {
+const DocsPage = ({ params }: PageProps) => {
   const value = params.var?.[0] ?? "Get-Started"
 
   const [type, setType] = useState<CurrentMode | null>(null)
