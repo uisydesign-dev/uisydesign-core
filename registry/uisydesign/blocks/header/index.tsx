@@ -2,7 +2,8 @@
 
 import React from "react"
 import { cn } from "@/lib/utils"
-import { Bell, Moon, Search, Settings, Share2, Star, Sun, User, type LucideIcon } from "lucide-react"
+import { Bell, Computer, Moon, Search, Settings, Share2, Star, Sun, User, type LucideIcon } from "lucide-react"
+import { useTheme } from "next-themes"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -27,6 +28,12 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from "@/components/ui/menubar"
+import { Button } from "@/components/ui/button"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
 
 // --- Header ---
 interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
@@ -49,7 +56,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(({ children, className
     <header
       ref={ref}
       className={cn(
-        "flex rounded-bl-xl rounded-br-xl gap-4 items-center px-6 py-3 border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700",
+        "flex rounded-bl-xl rounded-br-xl gap-4 items-center px-6 py-3 border-b border-gray-200 bg-white dark:bg-black dark:border-gray-700",
         justifyClasses[justify],
         className
       )}
@@ -133,20 +140,17 @@ const HeaderLogo = React.forwardRef<HTMLAnchorElement, HeaderLogoProps>(
   }
 )
 
-// --- Nav types ---
 interface MenuItem {
   title: string
   href: string
   description?: string
   icon?: LucideIcon
-  className?: string
 }
 
 interface FeaturedItem {
   href: string
   title: string
   description: string
-  className?: string
 }
 
 interface NavLink {
@@ -158,17 +162,14 @@ interface NavLink {
   items?: MenuItem[]
   width?: string
   showIcon?: boolean
-  className?: string
 }
 
-// --- HeaderNav ---
 interface HeaderNavProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode
   links?: NavLink[]
-  className?: string
 }
 
-const HeaderNav = React.forwardRef<HTMLElement, HeaderNavProps>(({ children, className, links, ...props }, ref) => {
+const HeaderNav: React.FC<HeaderNavProps> = ({ children, className, links, ...props }) => {
   const isMobile = useIsMobile()
 
   return (
@@ -180,12 +181,16 @@ const HeaderNav = React.forwardRef<HTMLElement, HeaderNavProps>(({ children, cla
       <NavigationMenuList className="flex flex-wrap gap-4">
         {links
           ? links.map((link, index) => {
+              // Simple link without dropdown
               if (!link.layout && link.href) {
                 return (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
                       asChild
-                      className={cn(navigationMenuTriggerStyle(), link.isActive ? "text-primary" : "text-muted-foreground")}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        link.isActive ? "text-primary" : "text-muted-foreground"
+                      )}
                     >
                       <Link href={link.href}>{link.label}</Link>
                     </NavigationMenuLink>
@@ -193,6 +198,7 @@ const HeaderNav = React.forwardRef<HTMLElement, HeaderNavProps>(({ children, cla
                 )
               }
 
+              // Link with dropdown menu
               return (
                 <NavigationMenuItem key={index}>
                   <NavigationMenuTrigger>{link.label}</NavigationMenuTrigger>
@@ -205,13 +211,17 @@ const HeaderNav = React.forwardRef<HTMLElement, HeaderNavProps>(({ children, cla
                               className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-4 no-underline outline-hidden transition-all duration-200 select-none focus:shadow-md md:p-6"
                               href={link.featured.href}
                             >
-                              <div className="mb-2 text-lg font-medium sm:mt-4">{link.featured.title}</div>
-                              <p className="text-muted-foreground text-sm leading-tight">{link.featured.description}</p>
+                              <div className="mb-2 text-lg font-medium sm:mt-4">
+                                {link.featured.title}
+                              </div>
+                              <p className="text-muted-foreground text-sm leading-tight">
+                                {link.featured.description}
+                              </p>
                             </a>
                           </NavigationMenuLink>
                         </li>
                         {link.items.map((item) => (
-                          <ListItem key={item.title} href={item.href}>
+                          <ListItem key={item.title} href={item.href} title={item.title}>
                             {item.description}
                           </ListItem>
                         ))}
@@ -256,7 +266,8 @@ const HeaderNav = React.forwardRef<HTMLElement, HeaderNavProps>(({ children, cla
       </NavigationMenuList>
     </NavigationMenu>
   )
-})
+}
+
 
 // --- ListItem helper ---
 function ListItem({ title, children, href, ...props }: React.ComponentPropsWithoutRef<"li"> & { href: string; title?: string }) {
@@ -429,14 +440,17 @@ const NotificationButton = React.forwardRef<HTMLButtonElement, GenericButtonProp
 ))
 
 const ThemeToggle = React.forwardRef<HTMLButtonElement, GenericButtonProps>((props, ref) => {
-  const [theme, setTheme] = React.useState<"light" | "dark">("light")
-  const toggleTheme = () => setTheme((prev) => (prev === "light" ? "dark" : "light"))
-
+  const { theme, setTheme } = useTheme()
   return (
-    <button ref={ref} className={cn("h-9 w-9", props.className)} onClick={toggleTheme} {...props}>
-      {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+    <Button variant="outline" size="icon" onClick={() => {
+      if (theme == "dark") setTheme("system")
+      else if (theme == "light") setTheme("dark")
+      else setTheme("light")
+    }}>
+      {theme == "light" ? <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" /> : theme == "dark" ? <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" /> : <Computer className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />}
+      
       <span className="sr-only">Toggle theme</span>
-    </button>
+    </Button>
   )
 })
 
@@ -469,7 +483,45 @@ const UserButton = React.forwardRef<HTMLButtonElement, GenericButtonProps>((prop
   </DropdownMenu>
 ))
 
+interface MenubarWithAvatarProps {
+  name: string,
+  avatar: string,
+  rounded?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full",
+  sizeOfImage?: string
+  className?: string
+}
 
+const MenubarWithAvatar = ({
+  name,
+  avatar,
+  rounded = "lg",
+  sizeOfImage = "25px",
+  className,
+}: MenubarWithAvatarProps) => {
+  return <Menubar>
+    <MenubarMenu>
+      <MenubarTrigger asChild className={cn(`flex p-2 items-center !rounded-${rounded}`, className)}>
+        <Button variant={"ghost"} className="flex p-2 flex-row gap-2 hover:bg-transparent hover:text-muted-foreground focus:bg-transparent focus:text-muted-foreground">
+          <Avatar className={cn("shadow-xl", `rounded-${rounded} w-[${sizeOfImage}] h-[${sizeOfImage}]`)}>
+            <AvatarImage src={avatar} alt={`Photo of ${name}`} />
+            <AvatarFallback>{name.split(" ").map((por) => por.substring(0, 1).toUpperCase())}</AvatarFallback>
+          </Avatar>
+          <span>{name}</span>
+        </Button>
+      </MenubarTrigger>
+      <MenubarContent>
+        <MenubarItem>
+          New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+        </MenubarItem>
+        <MenubarItem>New Window</MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem>Share</MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem>Print</MenubarItem>
+      </MenubarContent>
+    </MenubarMenu>
+  </Menubar>
+}
 
 export {
   Header,
@@ -484,5 +536,6 @@ export {
   NotificationButton,
   ThemeToggle,
   SettingsButton,
-  UserButton
+  UserButton,
+  MenubarWithAvatar,
 }

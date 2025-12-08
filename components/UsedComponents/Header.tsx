@@ -1,4 +1,4 @@
-import { Header, HeaderLogo, HeaderNav, HeaderGroup, SearchButton } from "@/registry/uisydesign/blocks/header"
+import { Header, HeaderLogo, HeaderNav, HeaderGroup, ThemeToggle, SearchButton, MenubarWithAvatar } from "@/registry/uisydesign/blocks/header"
 
 export default function PageHeader() {
     return <Header justify="between">
@@ -106,6 +106,8 @@ export default function PageHeader() {
     </HeaderGroup>
     <HeaderGroup>
       <SearchButton kbds={["⌘", "K"]} />
+      <MenubarWithAvatar rounded={"full"} name={"Zander Coffman"} avatar={"/me.png"}/>
+      <ThemeToggle/>
     </HeaderGroup>
   </Header>
 }

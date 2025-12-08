@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { OpenInV0Button } from "@/components/open-in-v0-button"
 
 type CurrentMode = "components"
 
@@ -87,7 +88,7 @@ export default function DocsPage({ params }: { params: { var?: string[] } }) {
           <section className="flex flex-col gap-1 pl-4">
             {
               foundItem.tableOfContents.map((content, idx) => {
-                return <a key={idx} href={`/docs${content.path}`} className="text-gray-700 hover:text-black hover:underline text-base transition-colors duration-200">
+                return <a key={idx} href={`/docs${content.path}`} className="light:text-gray-700 light:hover:text-black hover:underline text-base transition-colors duration-200">
                   {content.title}
                 </a>
               })
@@ -104,8 +105,8 @@ export default function DocsPage({ params }: { params: { var?: string[] } }) {
           TypeVal !== null &&
           "title" in TypeVal && "description" in TypeVal && "html" in TypeVal && (
             <>
-              <header className="flex mb-4 flex-row gap-6 justify-between">
-                <section>
+              <header className="flex w-[78vw] mb-4 flex-row gap-6 justify-between">
+                <section className="w-2/3">
                   <h1 className="scroll-m-20 text-4xl font-semibold tracking-tight text-balance">
                     {TypeVal.title}
                   </h1>
@@ -113,11 +114,8 @@ export default function DocsPage({ params }: { params: { var?: string[] } }) {
                     {TypeVal.description}
                   </p>
                 </section>
-                <section className="flex flex-row gap-2 items-center justify-center">
-                  <Button className="rounded-xl px-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 147 70" className="size-4.5 -translate-x-px"><path d="M56 50.203V14h14v46.156C70 65.593 65.593 70 60.156 70c-2.596 0-5.158-1-7-2.843L0 14h19.797L56 50.203ZM147 56h-14V23.953L100.953 56H133v14H96.687C85.814 70 77 61.186 77 50.312V14h14v32.156L123.156 14H91V0h36.312C138.186 0 147 8.814 147 19.688V56Z"></path></svg>
-                    <span>Open in v0</span>
-                  </Button>
+                <section className="w-1/3 flex flex-row gap-2 items-center justify-center">
+                  <OpenInV0Button name={TypeVal.title}/>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" className="rounded-xl px-4">
