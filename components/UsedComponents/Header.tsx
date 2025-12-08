@@ -105,7 +105,7 @@ export default function PageHeader() {
       />
     </HeaderGroup>
     <HeaderGroup>
-      <SearchButton />
+      <SearchButton kbds={["⌘", "K"]} />
     </HeaderGroup>
   </Header>
 }

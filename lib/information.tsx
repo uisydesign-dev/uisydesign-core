@@ -1,4 +1,7 @@
+import React from "react";
 import { Shield, Rocket, Crown } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import IFrameHeader from "@/app/iframes/components/Header";
 
 export const DATA = {
   title: "UIsy Design",
@@ -20,7 +23,8 @@ export const DATA = {
         logo: Shield,
         color: "#B41ACF",
         tableOfContents: [
-          { title: "Buttons", path: "/components/buttons" },
+          { title: "Overview", path: "/components/" },
+          { title: "Header", path: "/components/header" },
           { title: "Inputs", path: "/components/inputs" },
           { title: "Cards", path: "/components/cards" },
           { title: "Basic", path: "/components/cards/basic" },
@@ -40,3 +44,27 @@ export const DATA = {
     ],
   },
 };
+
+interface ComponentsPage {
+  title: string;
+  description: string;
+  html: React.JSX.Element
+}
+
+export const COMPONENTS: Record<string, ComponentsPage> = {
+  "components/header": {
+    title: "Header",
+    description:
+      "Take the stressors out of customizing your own custom header. Utilize reusable, plug-and-play components that adapt to your app, so you can build your own app instead of reinventing the wheel.",
+    html: <section className="w-full flex flex-col gap-2 h-full">
+      <section className="gap-2 m-0 p-0 !bg-none w-full flex flex-row h-[80vh]" >
+        <Card className="w-2/3 h-full">
+          <IFrameHeader/>
+        </Card>
+        <Card className="w-1/3 h-full"></Card>
+      </section>
+    </section>,
+  },
+};
+
+

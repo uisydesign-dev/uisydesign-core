@@ -1,0 +1,21 @@
+
+{
+    "name": "button",
+    "description": "A button component with different variants and sizes.",
+    "tags": ["button", "ui", "interactive"],
+    "component": true,
+    "source": "",
+    "docs": "",
+    "category": "UI",
+    "subcategory": "Interactive",
+    "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
+    "registryDependencies": [],
+    "files": [
+      {
+        "name": "index.tsx",
+        "path": "registry/uisydesign/ui/button.tsx",
+        "type": "component",
+        "target": ""
+      }
+    ]
+  }

@@ -1,0 +1,20 @@
+{
+    "name": "header",
+    "description": "A comprehensive header component system with multiple variants and interactive buttons",
+    "tags": ["navigation", "header", "layout"],
+    "component": true,
+    "source": "https://github.com/shadcn-ui/ui",
+    "docs": "https://ui.shadcn.com",
+    "category": "Layout",
+    "subcategory": "Navigation",
+    "dependencies": ["lucide-react", "next/link", "@radix-ui/react-dropdown-menu", "navigation-menu"],
+    "registryDependencies": ["navigation-menu", "input", "dropdown-menu"],
+    "files": [
+      {
+        "name": "index.tsx",
+        "path": "registry/new-york/blocks/header/index.tsx",
+        "type": "component",
+        "target": ""
+      }
+    ]
+  }

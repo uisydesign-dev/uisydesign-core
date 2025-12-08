@@ -34,6 +34,7 @@ interface SelectorLinkProps {
   title: string
   defaultValue?: string
   sectionsType?: "normal" | "big"
+  prefix: string
 }
 
 export function SelectorLink({
@@ -42,6 +43,7 @@ export function SelectorLink({
   title,
   defaultValue,
   sectionsType,
+  prefix
 }: SelectorLinkProps) {
   // Normalize function: lowercase, remove non-letters
   const normalize = (str: string) => str.toLowerCase().replace(/[^a-z]/g, "")
@@ -114,7 +116,7 @@ export function SelectorLink({
 
         {sectionsType === "big"
           ? items.map((item) => (
-              <Link href={`/docs/${toSlug(item.name)}`} key={item.name}>
+              <Link href={prefix + "/" + toSlug(item.name)} key={item.name}>
                 <DropdownMenuItem onClick={() => setActiveItem(item)} className="gap-2 p-2 pl-3">
                   <div
                     className="flex shadow-2xl size-8 rounded-md border-2 items-center justify-center"
@@ -130,7 +132,7 @@ export function SelectorLink({
               </Link>
             ))
           : items.map((item, index) => (
-              <Link href={`/docs/${toSlug(item.name)}`} key={item.name}>
+              <Link href={prefix + "/" + toSlug(item.name)} key={item.name}>
                 <DropdownMenuItem onClick={() => setActiveItem(item)} className="gap-2 p-2">
                   <div className="flex size-6 items-center justify-center rounded-md border">
                     <item.logo className="size-3.5 shrink-0" />
