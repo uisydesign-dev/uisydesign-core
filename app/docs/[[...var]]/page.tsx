@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, FC } from "react"
+import React, { useState, useEffect } from "react"
 import { COMPONENTS, DATA } from "@/lib/information"
 import { SelectorLink } from "@/registry/uisydesign/blocks/selector"
 import { LucideIcon, Rocket } from "lucide-react"
