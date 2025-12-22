@@ -49,7 +49,7 @@ import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 // --- Header ---
-interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
+export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode
   justify?: "start" | "center" | "end" | "between" | "around" | "evenly"
   className?: string,
@@ -83,7 +83,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(({ children, zIndex = 
 })
 
 // --- HeaderGroup ---
-interface HeaderGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface HeaderGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
   position?: "left" | "center" | "right"
   className?: string
@@ -104,7 +104,7 @@ const HeaderGroup = React.forwardRef<HTMLDivElement, HeaderGroupProps>(({ childr
 })
 
 // --- HeaderItem ---
-interface HeaderItemProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface HeaderItemProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
   asChild?: boolean
   className?: string
@@ -127,7 +127,7 @@ const HeaderItem = React.forwardRef<HTMLDivElement, HeaderItemProps>(({ children
 })
 
 // --- HeaderLogo ---
-interface HeaderLogoProps extends React.HTMLAttributes<HTMLAnchorElement> {
+export interface HeaderLogoProps extends React.HTMLAttributes<HTMLAnchorElement> {
   href?: string
   Icon?: LucideIcon | string | null
   reversed?: boolean
@@ -155,20 +155,20 @@ const HeaderLogo = React.forwardRef<HTMLAnchorElement, HeaderLogoProps>(
   }
 )
 
-interface MenuItem {
+export interface MenuItem {
   title: string
   href: string
   description?: string
   icon?: LucideIcon
 }
 
-interface FeaturedItem {
+export interface FeaturedItem {
   href: string
   title: string
   description: string
 }
 
-interface NavLink {
+export interface NavLink {
   href?: string
   label: string
   isActive?: boolean
@@ -179,7 +179,7 @@ interface NavLink {
   showIcon?: boolean
 }
 
-interface HeaderNavProps extends React.HTMLAttributes<HTMLElement> {
+export interface HeaderNavProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode
   links?: NavLink[]
 }
@@ -298,7 +298,7 @@ function ListItem({ title, children, href, ...props }: React.ComponentPropsWitho
 }
 
 // --- HeaderNavLink ---
-interface HeaderNavLinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
+export interface HeaderNavLinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
   href: string
   isActive?: boolean
   className?: string
@@ -320,11 +320,11 @@ const HeaderNavLink = React.forwardRef<HTMLAnchorElement, HeaderNavLinkProps>(
 )
 
 // --- Generic buttons ---
-interface GenericButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface GenericButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
 }
 
-interface SearchButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SearchButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   onSearch?: (query: string) => void
   kbds?: string[]
   className?: string
@@ -332,144 +332,255 @@ interface SearchButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   queries: Queries
 }
 
-interface CommandShortcut {
+export interface CommandShortcut {
   content: string;
 }
 
-interface CommandItem {
+export interface CommandItem {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   shortcut?: CommandShortcut;
 }
 
-interface CommandGroup {
+export interface CommandGroup {
   heading: string;
   items: CommandItem[];
 }
 
-interface Queries {
+export interface Queries {
   emptyText: string;
   input: string;
   groups: CommandGroup[];
 }
 
 const SearchButton = React.forwardRef<HTMLDivElement, SearchButtonProps>(
-  ({ onSearch, kbds = [], className, variant = "dropdown", queries = { emptyText: "", input: "", groups: [] }, ...props }, ref) => {
+  (
+    {
+      onSearch,
+      kbds = [],
+      className,
+      variant = "dropdown",
+      queries = { emptyText: "", input: "", groups: [] },
+      ...props
+    },
+    ref
+  ) => {
     const [open, setOpen] = React.useState(false)
+    const [query, setQuery] = React.useState("")
+    const containerRef = React.useRef<HTMLDivElement | null>(null)
 
-    const handleSearch = (query: string) => {
-      if (onSearch) onSearch(query)
+    const handleSearch = (value: string) => {
+      if (!value) return
+      onSearch?.(value)
       setOpen(false)
     }
 
-    return (
-      <>
+    /* -------------------- FILTER LOGIC -------------------- */
+    const filteredGroups = React.useMemo(() => {
+      const q = query.trim().toLowerCase()
+      if (!q) return queries.groups
 
-        {variant === "dropdown" ? <>
-          <DropdownMenu open={open} onOpenChange={setOpen}>
-            <DropdownMenuTrigger asChild>
-              <section ref={ref} className={cn("relative flex items-center", className)} {...props}>
-                <Search className="size-6 mr-2" />
-                <div className="relative w-full">
-                  <Input
-                    placeholder="Search..."
-                    className="h-9 pr-16"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleSearch(e.currentTarget.value)
-                    }}
-                  />
-                  {kbds.length > 0 && (
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1 pointer-events-none">
-                      <KbdGroup>
-                        {kbds.map((key, i) => (
-                          <Kbd key={i}>{key}</Kbd>
-                        ))}
-                      </KbdGroup>
-                    </div>
+      return queries.groups
+        .map((group) => ({
+          ...group,
+          items: group.items.filter((item) => {
+            const haystack = [
+              item.label,
+              item.shortcut?.content,
+            ]
+              .join(" ")
+              .toLowerCase()
+
+            return haystack.includes(q)
+          }),
+        }))
+        .filter((group) => group.items.length > 0)
+    }, [query, queries.groups])
+
+    React.useEffect(() => {
+      if (!open) return
+    
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          containerRef.current &&
+          !containerRef.current.contains(event.target as Node)
+        ) {
+          setOpen(false)
+        }
+      }
+    
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [open])
+    
+
+    /* -------------------- DROPDOWN VARIANT -------------------- */
+    if (variant === "dropdown") {
+      return (
+        <div
+          ref={(node) => {
+            containerRef.current = node
+            if (typeof ref === "function") ref(node)
+            else if (ref) ref.current = node
+          }}
+          className={cn("relative w-full max-w-sm", className)}
+          {...props}
+        >
+          {/* INPUT */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+
+            <Input
+              value={query}
+              placeholder="Search..."
+              className="h-9 pl-9 pr-14"
+              onFocus={() => setOpen(true)}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch(query)
+                if (e.key === "Escape") setOpen(false)
+              }}
+            />
+
+            {kbds.length > 0 && (
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1 pointer-events-none">
+                <KbdGroup>
+                  {kbds.map((key, i) => (
+                    <Kbd key={i}>{key}</Kbd>
+                  ))}
+                </KbdGroup>
+              </div>
+            )}
+          </div>
+
+          {/* RESULTS */}
+          {open && (
+            <div className="absolute z-50 mt-2 w-full">
+              <Card className="overflow-hidden shadow-lg">
+                <ScrollArea className="max-h-[320px] px-3 py-2">
+                  {filteredGroups.length === 0 && (
+                    <p className="py-6 text-center text-sm text-muted-foreground">
+                      {queries.emptyText}
+                    </p>
                   )}
-                </div>
-              </section>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className=" w-[320px] mt-4  relative z-30">
-              <Card className="w-full h-min max-h-[420px] px-4">
-                <ScrollArea className="w-full max-h-[380px] flex flex-col pr-4 gap-8">
-                  {queries.groups.map((group, index) => (
-                    <section className="flex flex-col gap-4 w-full text-gray-600">
-                      <h1 className="scroll-m-20 text-sm font-semibold tracking-tight mt-4">{group.heading}</h1>
-                      {group.items.map((item) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <div key={item.label} className="flex flex-row justify-between gap-2 items-center">
-                            <div className="flex flex-row gap-2 items-center">
-                              <IconComponent className="size-6 mr-2" />
-                              <span className="text-black">{item.label}</span>
-                            </div>
-                            {item.shortcut && <div>{item.shortcut.content}</div>}
-                          </div>
-                        );
-                      })}
-                      {index !== queries.groups.length - 1 && <Separator />}
-                    </section>
+
+                  {filteredGroups.map((group, index) => (
+                    <div key={group.heading} className="mb-4 last:mb-0">
+                      <h4 className="mb-2 text-xs font-semibold text-muted-foreground">
+                        {group.heading}
+                      </h4>
+
+                      <div className="flex flex-col gap-1">
+                        {group.items.map((item) => {
+                          const Icon = item.icon
+                          return (
+                            <button
+                              key={item.label}
+                              onClick={() => handleSearch(item.label)}
+                              className="flex items-center justify-between rounded-md px-2 py-2 text-sm transition hover:bg-muted"
+                            >
+                              <div className="flex items-center gap-2">
+                                <Icon className="size-4 text-muted-foreground" />
+                                <span>{item.label}</span>
+                              </div>
+
+                              {item.shortcut && (
+                                <span className="text-xs text-muted-foreground">
+                                  {item.shortcut.content}
+                                </span>
+                              )}
+                            </button>
+                          )
+                        })}
+                      </div>
+
+                      {index !== filteredGroups.length - 1 && (
+                        <Separator className="mt-3" />
+                      )}
+                    </div>
                   ))}
                 </ScrollArea>
               </Card>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </> : <>
-          <section ref={ref} className={cn("relative flex items-center", className)} {...props} onClick={() => setOpen(!open)}>
-            <Search className="size-6 mr-2" />
-            <div className="relative w-full">
-              <Input
-                placeholder="Search..."
-                className="h-9 pr-16"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSearch(e.currentTarget.value)
-                }}
-              />
-              {kbds.length > 0 && (
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1 pointer-events-none">
-                  <KbdGroup>
-                    {kbds.map((key, i) => (
-                      <Kbd key={i}>{key}</Kbd>
-                    ))}
-                  </KbdGroup>
-                </div>
-              )}
             </div>
-          </section>
-          <CommandDialog open={open} onOpenChange={setOpen}>
-            <CommandInput placeholder={queries.input} />
-            <CommandList>
-              <CommandEmpty>{queries.emptyText}</CommandEmpty>
-              {queries.groups.map((group, index) => (
-                <React.Fragment key={group.heading}>
-                  <CommandGroup heading={group.heading}>
-                    {group.items.map((item) => {
-                      const IconComponent = item.icon;
-                      return (
-                        <CommandItem key={item.label}>
-                          <IconComponent className="size-4 mr-2" />
-                          <span>{item.label}</span>
-                          {item.shortcut && <CommandShortcut>{item.shortcut.content}</CommandShortcut>}
-                        </CommandItem>
-                      );
-                    })}
-                  </CommandGroup>
-                  {index !== queries.groups.length - 1 && <CommandSeparator />}
-                </React.Fragment>
-              ))}
-            </CommandList>
-          </CommandDialog>
+          )}
+        </div>
+      )
+    }
 
-        </>}</>
+    /* -------------------- MODAL VARIANT -------------------- */
+    return (
+      <>
+        <section
+          ref={ref}
+          className={cn("relative flex items-center", className)}
+          {...props}
+          onClick={() => setOpen(true)}
+        >
+          <Search className="size-6 mr-2" />
+          <div className="relative w-full">
+            <Input placeholder="Search..." className="h-9 pr-16" />
+            {kbds.length > 0 && (
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1 pointer-events-none">
+                <KbdGroup>
+                  {kbds.map((key, i) => (
+                    <Kbd key={i}>{key}</Kbd>
+                  ))}
+                </KbdGroup>
+              </div>
+            )}
+          </div>
+        </section>
 
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <CommandInput
+            placeholder={queries.input}
+            value={query}
+            onValueChange={setQuery}
+          />
+          <CommandList>
+            <CommandEmpty>{queries.emptyText}</CommandEmpty>
+
+            {filteredGroups.map((group, index) => (
+              <React.Fragment key={group.heading}>
+                <CommandGroup heading={group.heading}>
+                  {group.items.map((item) => {
+                    const Icon = item.icon
+                    return (
+                      <CommandItem
+                        key={item.label}
+                        onSelect={() => handleSearch(item.label)}
+                      >
+                        <Icon className="mr-2 size-4" />
+                        <span>{item.label}</span>
+                        {item.shortcut && (
+                          <CommandShortcut>
+                            {item.shortcut.content}
+                          </CommandShortcut>
+                        )}
+                      </CommandItem>
+                    )
+                  })}
+                </CommandGroup>
+
+                {index !== filteredGroups.length - 1 && (
+                  <CommandSeparator />
+                )}
+              </React.Fragment>
+            ))}
+          </CommandList>
+        </CommandDialog>
+      </>
     )
   }
 )
 
+SearchButton.displayName = "SearchButton"
 
 
-interface ShareButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+
+
+
+export interface ShareButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   url?: string
   title?: string
   className?: string
@@ -550,7 +661,7 @@ const NotificationButton = React.forwardRef<HTMLButtonElement, GenericButtonProp
   </DropdownMenu>
 ))
 
-interface ThemeToggleProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ThemeToggleProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   theme: "light" | "dark" | "system" | undefined;
   setTheme: (theme: "light" | "dark" | "system") => void;
 }
@@ -612,7 +723,7 @@ const UserButton = React.forwardRef<HTMLButtonElement, GenericButtonProps>((prop
   </DropdownMenu>
 ))
 
-interface MenubarWithAvatarProps {
+export interface MenubarWithAvatarProps {
   name: string,
   avatar: string,
   rounded?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full",
