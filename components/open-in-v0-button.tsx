@@ -3,12 +3,14 @@ import { cn } from "@/lib/utils"
 
 export function OpenInV0Button({
   name,
+  variant,
   className,
 }: { name: string } & React.ComponentProps<typeof Button>) {
   return (
     <Button
       aria-label="Open in v0"
       size="sm"
+      variant={variant}
       className={cn(
         "shadow-none bg-black text-white hover:bg-black hover:text-white dark:bg-white dark:text-black",
         className
@@ -19,8 +21,8 @@ export function OpenInV0Button({
         href={`https://v0.dev/chat/api/open?url=${process.env.NEXT_PUBLIC_BASE_URL}/r/${name}.json`}
         target="_blank"
         rel="noreferrer"
+        className="flex justify-between flex-row w-full"
       >
-        Open in{" "}
         <svg
           viewBox="0 0 40 20"
           fill="none"
@@ -36,6 +38,10 @@ export function OpenInV0Button({
             fill="currentColor"
           ></path>
         </svg>
+        <span>
+          Open in v0
+        </span>
+
       </a>
     </Button>
   )

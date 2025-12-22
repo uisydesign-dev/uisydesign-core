@@ -1,8 +1,9 @@
 import React from "react";
 import { Shield, Rocket, Crown } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import IFrameHeader from "@/app/iframes/components/Header";
 import { CodeShowcase } from "@/registry/uisydesign/blocks/code-editor";
+import { Card } from "@/components/ui/card";
+import CLIManualInstallation, { CDNInstall } from "@/registry/uisydesign/blocks/installer";
 
 export const DATA = {
   title: "UIsy Design",
@@ -50,17 +51,19 @@ interface ComponentsPage {
   title: string;
   description: string;
   html: React.JSX.Element
+  ids: string[]
 }
 
 export const COMPONENTS: Record<string, ComponentsPage> = {
   "components/header": {
     title: "Header",
+    ids: ["about", "installation"],
     description:
-      "Take the stressors out of customizing your own custom header. Utilize reusable, plug-and-play components that adapt to your app, so you can build your own app instead of reinventing the wheel.",
-    html: <section className="w-full flex flex-col gap-2 h-full">
-      <section className="gap-2 m-0 p-0 !bg-none w-[80vw] flex flex-row h-[80vh]" >
-        <Card className="p-0 m-0 max-w-2/3 h-full">
-          <IFrameHeader/>
+      "Simplify the website creation process by using a custom plug-and-play header.",
+    html: <section className="w-[73vw] flex flex-col gap-12 h-full">
+      <section className="gap-2 m-0 p-0 !bg-none w-[73vw] flex flex-row h-[80vh]" >
+        <Card className="p-0 m-0 max-w-2/3 w-full h-full">
+          <IFrameHeader />
         </Card>
         <Card className="m-0 p-0 max-w-1/3 w-full h-full">
           <CodeShowcase code={
@@ -119,8 +122,27 @@ export default function IFrameHeader() {
     </section>
 
 }`
-          }/>
+          } />
         </Card>
+      </section>
+      <section>
+        <h2 id="about" className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+          About
+        </h2>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          Take the stressors out of customizing your own custom header. Utilize reusable, plug-and-play components that adapt to your app, so you can build your own app instead of reinventing the wheel.
+        </p>
+      </section>
+      <section className="h-auto">
+        <h2 id="installation" className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+          Installation
+        </h2>
+        <CLIManualInstallation height={"screen"} CLI={<>
+            <CDNInstall packageManager={"npm"} packageName={"https://uisy-design.vercel.app/r/header.json"}/>
+            <h1>Hello how are you?</h1>
+          </>} Manual={<>
+          What
+          </>}/>
       </section>
     </section>,
   },

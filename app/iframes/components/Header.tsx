@@ -45,7 +45,7 @@ export default function IFrameHeader() {
                 />
             </HeaderGroup>
             <HeaderGroup>
-                <SearchButton kbds={["⌘", "K"]} className="!max-w-[200px]" />
+                <SearchButton kbds={["⌘", "K"]} className="!max-w-[170px]" />
                 <MenubarWithAvatar rounded={"full"} name={"UIsy"} avatar={"/UIsyLogo.jpeg"} />
             </HeaderGroup>
         </Header>
