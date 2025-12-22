@@ -1,7 +1,12 @@
+"use client"
 import { Header, HeaderLogo, HeaderNav, HeaderGroup, ThemeToggle, SearchButton, MenubarWithAvatar } from "@/registry/uisydesign/blocks/header"
+import { Calendar, Smile, Calculator, User, CreditCard, Settings } from "lucide-react";
+import { useTheme } from "next-themes"
 
 export default function PageHeader() {
-    return <Header justify="between" className="z-[50]">
+  const { theme, setTheme } = useTheme()
+
+    return <Header justify="between" zIndex={40}>
     <HeaderGroup>
       <HeaderLogo Icon={"./UIsyLogo.jpeg"} reversed>
         UIsy Design
@@ -105,8 +110,47 @@ export default function PageHeader() {
       />
     </HeaderGroup>
     <HeaderGroup>
-      <SearchButton kbds={["⌘", "K"]} />
-      <ThemeToggle/>
+      <SearchButton kbds={["⌘", "K"]} variant="dropdown" queries={
+        {
+          input: "Type a command or search...",
+          emptyText: "No results found.",
+          groups: [
+            {
+              heading: "Suggestions",
+              items: [
+                { icon: Calendar, label: "Calendar" },
+                { icon: Smile, label: "Search Emoji" },
+                { icon: Calculator, label: "Calculator" }
+              ]
+            },
+            {
+              heading: "Settings",
+              items: [
+                { icon: User, label: "Profile", shortcut: { content: "⌘P" } },
+                { icon: CreditCard, label: "Billing", shortcut: { content: "⌘B" } },
+                { icon: Settings, label: "Settings", shortcut: { content: "⌘S" } }
+              ]
+            },
+            {
+              heading: "Suggestions",
+              items: [
+                { icon: Calendar, label: "Calendar" },
+                { icon: Smile, label: "Search Emoji" },
+                { icon: Calculator, label: "Calculator" }
+              ]
+            },
+            {
+              heading: "Settings",
+              items: [
+                { icon: User, label: "Profile", shortcut: { content: "⌘P" } },
+                { icon: CreditCard, label: "Billing", shortcut: { content: "⌘B" } },
+                { icon: Settings, label: "Settings", shortcut: { content: "⌘S" } }
+              ]
+            }
+          ]
+        }
+      }/>
+      <ThemeToggle setTheme={setTheme} theme={theme as "light" | "dark" | "system"} />
     </HeaderGroup>
   </Header>
 }

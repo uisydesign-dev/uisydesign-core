@@ -3,7 +3,7 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 import { Bell, Computer, Moon, Search, Settings, Share2, Star, Sun, User, type LucideIcon } from "lucide-react"
-import { useTheme } from "next-themes"
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -34,15 +34,29 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command"
+import * as LucideIcons from "lucide-react";
+import { Separator } from "@/components/ui/separator"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 // --- Header ---
 interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode
   justify?: "start" | "center" | "end" | "between" | "around" | "evenly"
-  className?: string
+  className?: string,
+  zIndex?: number
 }
 
-const Header = React.forwardRef<HTMLElement, HeaderProps>(({ children, className, justify = "between", ...props }, ref) => {
+const Header = React.forwardRef<HTMLElement, HeaderProps>(({ children, zIndex = 30, className, justify = "between", ...props }, ref) => {
   const justifyClasses: Record<NonNullable<HeaderProps["justify"]>, string> = {
     start: "justify-start",
     center: "justify-center",
@@ -56,8 +70,9 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(({ children, className
     <header
       ref={ref}
       className={cn(
-        "flex rounded-bl-xl rounded-br-xl gap-4 items-center px-6 py-3 border-b border-gray-200 bg-white dark:bg-black dark:border-gray-700",
+        "flex relative rounded-bl-xl rounded-br-xl gap-4 items-center px-6 py-3 border-b border-gray-200 bg-white dark:bg-black dark:border-gray-700",
         justifyClasses[justify],
+        `z-[${zIndex}]`,
         className
       )}
       {...props}
@@ -82,7 +97,7 @@ const HeaderGroup = React.forwardRef<HTMLDivElement, HeaderGroupProps>(({ childr
   }
 
   return (
-    <div ref={ref} className={cn("flex items-center gap-4", positionClasses[position], className)} {...props}>
+    <div ref={ref} className={cn("flex relative items-center gap-4", positionClasses[position], className)} {...props}>
       {children}
     </div>
   )
@@ -175,93 +190,92 @@ const HeaderNav: React.FC<HeaderNavProps> = ({ children, className, links, ...pr
   return (
     <NavigationMenu
       viewport={isMobile}
-      className={cn("hidden md:flex z-10 items-center gap-6", className)}
+      className={cn("hidden md:flex z-30 items-center gap-6", className)}
       {...(props as { className?: string; viewport?: boolean })}
     >
       <NavigationMenuList className="flex flex-wrap gap-4">
         {links
           ? links.map((link, index) => {
-              // Simple link without dropdown
-              if (!link.layout && link.href) {
-                return (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      asChild
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        link.isActive ? "text-primary" : "text-muted-foreground"
-                      )}
-                    >
-                      <Link href={link.href}>{link.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                )
-              }
-
-              // Link with dropdown menu
+            // Simple link without dropdown
+            if (!link.layout && link.href) {
               return (
                 <NavigationMenuItem key={index}>
-                  <NavigationMenuTrigger>{link.label}</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    {link.layout === "featured" && link.featured && link.items ? (
-                      <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                        <li className="row-span-3">
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-4 no-underline outline-hidden transition-all duration-200 select-none focus:shadow-md md:p-6"
-                              href={link.featured.href}
-                            >
-                              <div className="mb-2 text-lg font-medium sm:mt-4">
-                                {link.featured.title}
-                              </div>
-                              <p className="text-muted-foreground text-sm leading-tight">
-                                {link.featured.description}
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
-                        </li>
-                        {link.items.map((item) => (
-                          <ListItem key={item.title} href={item.href} title={item.title}>
-                            {item.description}
-                          </ListItem>
-                        ))}
-                      </ul>
-                    ) : link.layout === "double" && link.items ? (
-                      <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                        {link.items.map((item) => (
-                          <ListItem key={item.title} title={item.title} href={item.href}>
-                            {item.description}
-                          </ListItem>
-                        ))}
-                      </ul>
-                    ) : link.layout === "single" && link.items ? (
-                      <ul className={cn("grid gap-4", link.width || "w-[200px]")}>
-                        <li>
-                          {link.items.map((item) => (
-                            <NavigationMenuLink asChild key={item.title}>
-                              <Link
-                                href={item.href}
-                                className={cn(link.showIcon && item.icon && "flex items-center gap-2")}
-                              >
-                                {link.showIcon && item.icon && <item.icon className="h-4 w-4" />}
-                                {item.description ? (
-                                  <>
-                                    <div className="font-medium">{item.title}</div>
-                                    <div className="text-muted-foreground text-sm">{item.description}</div>
-                                  </>
-                                ) : (
-                                  item.title
-                                )}
-                              </Link>
-                            </NavigationMenuLink>
-                          ))}
-                        </li>
-                      </ul>
-                    ) : null}
-                  </NavigationMenuContent>
+                  <NavigationMenuLink
+
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      link.isActive ? "text-primary" : "text-muted-foreground"
+                    )}
+                  >
+                    <Link href={link.href}>{link.label}</Link>                  </NavigationMenuLink>
                 </NavigationMenuItem>
               )
-            })
+            }
+
+            // Link with dropdown menu
+            return (
+              <NavigationMenuItem key={index}>
+                <NavigationMenuTrigger>{link.label}</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  {link.layout === "featured" && link.featured && link.items ? (
+                    <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                      <li className="row-span-3">
+                        <NavigationMenuLink asChild>
+                          <a
+                            className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-4 no-underline outline-hidden transition-all duration-200 select-none focus:shadow-md md:p-6"
+                            href={link.featured.href}
+                          >
+                            <div className="mb-2 text-lg font-medium sm:mt-4">
+                              {link.featured.title}
+                            </div>
+                            <p className="text-muted-foreground text-sm leading-tight">
+                              {link.featured.description}
+                            </p>
+                          </a>
+                        </NavigationMenuLink>
+                      </li>
+                      {link.items.map((item) => (
+                        <ListItem key={item.title} href={item.href} title={item.title}>
+                          {item.description}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  ) : link.layout === "double" && link.items ? (
+                    <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                      {link.items.map((item) => (
+                        <ListItem key={item.title} title={item.title} href={item.href}>
+                          {item.description}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  ) : link.layout === "single" && link.items ? (
+                    <ul className={cn("grid gap-4", link.width || "w-[200px]")}>
+                      <li>
+                        {link.items.map((item) => (
+                          <NavigationMenuLink asChild key={item.title}>
+                            <Link
+                              href={item.href}
+                              className={cn(link.showIcon && item.icon && "flex items-center gap-2")}
+                            >
+                              {link.showIcon && item.icon && <item.icon className="h-4 w-4" />}
+                              {item.description ? (
+                                <>
+                                  <div className="font-medium">{item.title}</div>
+                                  <div className="text-muted-foreground text-sm">{item.description}</div>
+                                </>
+                              ) : (
+                                item.title
+                              )}
+                            </Link>
+                          </NavigationMenuLink>
+                        ))}
+                      </li>
+                    </ul>
+                  ) : null}
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            )
+          })
           : children}
       </NavigationMenuList>
     </NavigationMenu>
@@ -314,26 +328,102 @@ interface SearchButtonProps extends React.HTMLAttributes<HTMLDivElement> {
   onSearch?: (query: string) => void
   kbds?: string[]
   className?: string
+  variant?: "modal" | "dropdown"
+  queries: Queries
+}
+
+interface CommandShortcut {
+  content: string;
+}
+
+interface CommandItem {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  shortcut?: CommandShortcut;
+}
+
+interface CommandGroup {
+  heading: string;
+  items: CommandItem[];
+}
+
+interface Queries {
+  emptyText: string;
+  input: string;
+  groups: CommandGroup[];
 }
 
 const SearchButton = React.forwardRef<HTMLDivElement, SearchButtonProps>(
-  ({ onSearch, kbds = [], className, ...props }, ref) => {
+  ({ onSearch, kbds = [], className, variant = "dropdown", queries = { emptyText: "", input: "", groups: [] }, ...props }, ref) => {
     const [open, setOpen] = React.useState(false)
 
+    const handleSearch = (query: string) => {
+      if (onSearch) onSearch(query)
+      setOpen(false)
+    }
+
     return (
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger asChild>
-          <section ref={ref} className={cn("relative flex items-center", className)} {...props}>
+      <>
+
+        {variant === "dropdown" ? <>
+          <DropdownMenu open={open} onOpenChange={setOpen}>
+            <DropdownMenuTrigger asChild>
+              <section ref={ref} className={cn("relative flex items-center", className)} {...props}>
+                <Search className="size-6 mr-2" />
+                <div className="relative w-full">
+                  <Input
+                    placeholder="Search..."
+                    className="h-9 pr-16"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleSearch(e.currentTarget.value)
+                    }}
+                  />
+                  {kbds.length > 0 && (
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1 pointer-events-none">
+                      <KbdGroup>
+                        {kbds.map((key, i) => (
+                          <Kbd key={i}>{key}</Kbd>
+                        ))}
+                      </KbdGroup>
+                    </div>
+                  )}
+                </div>
+              </section>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className=" w-[320px] mt-4  relative z-30">
+              <Card className="w-full h-min max-h-[420px] px-4">
+                <ScrollArea className="w-full max-h-[380px] flex flex-col pr-4 gap-8">
+                  {queries.groups.map((group, index) => (
+                    <section className="flex flex-col gap-4 w-full text-gray-600">
+                      <h1 className="scroll-m-20 text-sm font-semibold tracking-tight mt-4">{group.heading}</h1>
+                      {group.items.map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <div key={item.label} className="flex flex-row justify-between gap-2 items-center">
+                            <div className="flex flex-row gap-2 items-center">
+                              <IconComponent className="size-6 mr-2" />
+                              <span className="text-black">{item.label}</span>
+                            </div>
+                            {item.shortcut && <div>{item.shortcut.content}</div>}
+                          </div>
+                        );
+                      })}
+                      {index !== queries.groups.length - 1 && <Separator />}
+                    </section>
+                  ))}
+                </ScrollArea>
+              </Card>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </> : <>
+          <section ref={ref} className={cn("relative flex items-center", className)} {...props} onClick={() => setOpen(!open)}>
             <Search className="size-6 mr-2" />
             <div className="relative w-full">
               <Input
                 placeholder="Search..."
                 className="h-9 pr-16"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && onSearch) {
-                    onSearch(e.currentTarget.value)
-                    setOpen(false)
-                  }
+                  if (e.key === "Enter") handleSearch(e.currentTarget.value)
                 }}
               />
               {kbds.length > 0 && (
@@ -347,15 +437,36 @@ const SearchButton = React.forwardRef<HTMLDivElement, SearchButtonProps>(
               )}
             </div>
           </section>
-        </DropdownMenuTrigger>
+          <CommandDialog open={open} onOpenChange={setOpen}>
+            <CommandInput placeholder={queries.input} />
+            <CommandList>
+              <CommandEmpty>{queries.emptyText}</CommandEmpty>
+              {queries.groups.map((group, index) => (
+                <React.Fragment key={group.heading}>
+                  <CommandGroup heading={group.heading}>
+                    {group.items.map((item) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <CommandItem key={item.label}>
+                          <IconComponent className="size-4 mr-2" />
+                          <span>{item.label}</span>
+                          {item.shortcut && <CommandShortcut>{item.shortcut.content}</CommandShortcut>}
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                  {index !== queries.groups.length - 1 && <CommandSeparator />}
+                </React.Fragment>
+              ))}
+            </CommandList>
+          </CommandDialog>
 
-        <DropdownMenuContent align="end" className="w-[300px] p-4">
-          <Card className="w-full h-full">Hello</Card>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </>}</>
+
     )
   }
 )
+
 
 
 interface ShareButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -439,20 +550,38 @@ const NotificationButton = React.forwardRef<HTMLButtonElement, GenericButtonProp
   </DropdownMenu>
 ))
 
-const ThemeToggle = React.forwardRef<HTMLButtonElement, GenericButtonProps>((props, ref) => {
-  const { theme, setTheme } = useTheme()
-  return (
-    <Button variant="outline" size="icon" onClick={() => {
-      if (theme == "dark") setTheme("system")
-      else if (theme == "light") setTheme("dark")
-      else setTheme("light")
-    }}>
-      {theme == "light" ? <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" /> : theme == "dark" ? <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" /> : <Computer className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />}
-      
-      <span className="sr-only">Toggle theme</span>
-    </Button>
-  )
-})
+interface ThemeToggleProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  theme: "light" | "dark" | "system" | undefined;
+  setTheme: (theme: "light" | "dark" | "system") => void;
+}
+
+const ThemeToggle = React.forwardRef<HTMLButtonElement, ThemeToggleProps>(
+  ({ theme, setTheme, ...props }, ref) => {
+    return (
+      <Button
+        ref={ref}
+        variant="outline"
+        size="icon"
+        onClick={() => {
+          if (theme === "dark") setTheme("system");
+          else if (theme === "light") setTheme("dark");
+          else setTheme("light");
+        }}
+        {...props}
+      >
+        {theme === "light" ? (
+          <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+        ) : theme === "dark" ? (
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+        ) : (
+          <Computer className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+        )}
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    );
+  }
+);
+
 
 const SettingsButton = React.forwardRef<HTMLButtonElement, GenericButtonProps>((props, ref) => (
   <button ref={ref} className={cn("h-9 w-9", props.className)} {...props}>
